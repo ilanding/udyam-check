@@ -34,7 +34,7 @@ PAGE = """
 <div class="box">
   <h1>Udyam Check</h1>
   <form id="f">
-    <input id="ident" name="ident" placeholder="Enter mobile number" inputmode="numeric" autocomplete="off" required>
+    <input id="ident" name="ident" placeholder="Enter mobile number or email" autocomplete="off" required>
     <button id="btn" type="submit">Check</button>
   </form>
   <div id="res" class="result"></div>
@@ -50,8 +50,8 @@ document.getElementById('f').addEventListener('submit', async (e) => {
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({ ident: document.getElementById('ident').value }) });
     const j = await r.json();
-    if (j.status === 'REGISTERED') { res.className = 'result ok'; res.textContent = 'REGISTERED'; }
-    else if (j.status === 'NOT_REGISTERED') { res.className = 'result no'; res.textContent = 'NOT REGISTERED'; }
+    if (j.status === 'REGISTERED') { res.className = 'result ok'; res.textContent = 'Registered ✅'; }
+    else if (j.status === 'NOT_REGISTERED') { res.className = 'result no'; res.textContent = 'Not Registered ❌'; }
     else { res.className = 'result warn'; res.textContent = j.message || 'Something went wrong. Try again.'; }
   } catch (err) { res.className = 'result warn'; res.textContent = 'Something went wrong. Try again.'; }
   btn.disabled = false; btn.textContent = 'Check';
