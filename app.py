@@ -7,7 +7,7 @@ app = Flask(__name__)
 
 PAGE = """
 <!DOCTYPE html>
-<html lang="hi">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -16,30 +16,28 @@ PAGE = """
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: -apple-system, 'Segoe UI', Arial, sans-serif; background: #fff; color: #111;
          min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
-  .box { width: 100%; max-width: 420px; border: 2px solid #111; border-radius: 12px; padding: 28px 24px; }
-  h1 { font-size: 22px; margin-bottom: 6px; }
-  p.sub { font-size: 13px; color: #555; margin-bottom: 20px; }
-  input { width: 100%; padding: 14px; font-size: 16px; border: 2px solid #111; border-radius: 8px; margin-bottom: 12px; }
+  .box { width: 100%; max-width: 420px; border: 2px solid #111; border-radius: 12px; padding: 28px 24px; text-align: center; }
+  h1 { font-size: 22px; margin-bottom: 20px; }
+  input { width: 100%; padding: 14px; font-size: 16px; border: 2px solid #111; border-radius: 8px; margin-bottom: 12px; text-align: center; }
   button { width: 100%; padding: 14px; font-size: 16px; font-weight: bold; background: #111; color: #fff;
            border: none; border-radius: 8px; cursor: pointer; }
   button:disabled { opacity: .5; }
-  .result { margin-top: 18px; padding: 14px; border-radius: 8px; font-size: 15px; display: none; }
+  .result { margin-top: 18px; padding: 16px; border-radius: 8px; font-size: 18px; font-weight: bold;
+            letter-spacing: 1px; display: none; }
   .result.ok { display: block; background: #111; color: #fff; }
   .result.no { display: block; background: #fff; color: #111; border: 2px solid #111; }
-  .result.warn { display: block; background: #f5f5f5; color: #111; border: 1px dashed #111; }
-  .note { margin-top: 16px; font-size: 11px; color: #777; }
+  .result.warn { display: block; background: #f5f5f5; color: #111; border: 1px dashed #111;
+                 font-size: 14px; font-weight: normal; letter-spacing: 0; }
 </style>
 </head>
 <body>
 <div class="box">
   <h1>Udyam Check</h1>
-  <p class="sub">Mobile number ya email daalo — pata chalega Udyam registered hai ya nahi.</p>
   <form id="f">
-    <input id="ident" name="ident" placeholder="9876543210 ya email" autocomplete="off" required>
-    <button id="btn" type="submit">Check karo</button>
+    <input id="ident" name="ident" placeholder="Enter mobile number" inputmode="numeric" autocomplete="off" required>
+    <button id="btn" type="submit">Check</button>
   </form>
   <div id="res" class="result"></div>
-  <p class="note">Note: agar number registered hai to uspe asli OTP SMS jayega. Sirf customer ke apne number pe, uski permission se check karo.</p>
 </div>
 <script>
 document.getElementById('f').addEventListener('submit', async (e) => {
@@ -52,11 +50,11 @@ document.getElementById('f').addEventListener('submit', async (e) => {
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({ ident: document.getElementById('ident').value }) });
     const j = await r.json();
-    if (j.status === 'REGISTERED') { res.className = 'result ok'; res.textContent = '✅ REGISTERED hai — OTP bhej diya gaya hai is number pe.'; }
-    else if (j.status === 'NOT_REGISTERED') { res.className = 'result no'; res.textContent = '❌ NOT REGISTERED — is pe koi Udyam nahi hai.'; }
-    else { res.className = 'result warn'; res.textContent = '❓ ' + j.message; }
-  } catch (err) { res.className = 'result warn'; res.textContent = '❓ Network error — dobara try karo.'; }
-  btn.disabled = false; btn.textContent = 'Check karo';
+    if (j.status === 'REGISTERED') { res.className = 'result ok'; res.textContent = 'REGISTERED'; }
+    else if (j.status === 'NOT_REGISTERED') { res.className = 'result no'; res.textContent = 'NOT REGISTERED'; }
+    else { res.className = 'result warn'; res.textContent = j.message || 'Something went wrong. Try again.'; }
+  } catch (err) { res.className = 'result warn'; res.textContent = 'Something went wrong. Try again.'; }
+  btn.disabled = false; btn.textContent = 'Check';
 });
 </script>
 </body>
